@@ -237,7 +237,7 @@ function showSentences() {
   app.innerHTML = sentences.map(s => `
     <div class="card sentence-card">
       <div class="zaza">${s.zaza}</div>
-      <div class="de">${s.tr}</div><br>
+      <div class="translation">${s.tr}</div><br>
       <button onclick="speak(\`${s.zaza}\`)">🔊 Hören</button>
       <button class="secondary" onclick="addPoint()">✅ Kann ich</button>
     </div>
