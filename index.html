@@ -331,7 +331,7 @@
     <div class="nav">
       <button type="button" onclick="showWords()">📚 Wörter</button>
       <button type="button" onclick="showSentences()">💬 Sätze</button>
-      <button type="button" onclick="showQuiz()">🎮 Quiz</button>
+      <button type="button" onclick="startQuiz()">🎮 Quiz</button>
     </div>
 
     <div class="voice-box">
@@ -352,6 +352,8 @@
 let points = Number(localStorage.getItem("zazaPoints")) || 0;
 let currentCategory = "Alle";
 let quizIndex = 0;
+let quizMistakes = 0;
+let quizQuestions = [];
 let voiceMode = localStorage.getItem("zazaVoiceMode") || "tr-TR";
 
 document.getElementById("points").textContent = points;
@@ -361,39 +363,40 @@ setTimeout(() => {
 }, 0);
 
 const vocabulary = [
-  { emoji: "🐶", zaza: "Kutık", de: "Hund", tr: "Köpek", en: "Dog", category: "Tiere" },
-  { emoji: "🐰", zaza: "Arveş", de: "Hase", tr: "Tavşan", en: "Rabbit", category: "Tiere" },
+  { emoji: "🐶", zaza: "Kuttek", de: "Hund", tr: "Köpek", en: "Dog", category: "Tiere" },
+  { emoji: "🐰", zaza: "Arvesch", de: "Hase", tr: "Tavşan", en: "Rabbit", category: "Tiere" },
   { emoji: "🐑", zaza: "Mi", de: "Schaf", tr: "Koyun", en: "Sheep", category: "Tiere" },
   { emoji: "🐒", zaza: "Meymu", de: "Affe", tr: "Maymun", en: "Monkey", category: "Tiere" },
-  { emoji: "🦊", zaza: "Lu", de: "Fuchs", tr: "Tilki", en: "Fox", category: "Tiere" },
+  { emoji: "🦊", zaza: "Luu", de: "Fuchs", tr: "Tilki", en: "Fox", category: "Tiere" },
   { emoji: "🦁", zaza: "Aslan", de: "Löwe", tr: "Aslan", en: "Lion", category: "Tiere" },
-  { emoji: "🐸", zaza: "Bäq", de: "Frosch", tr: "Kurbağa", en: "Frog", category: "Tiere" },
-  { emoji: "🐻", zaza: "Heş", de: "Bär", tr: "Ayı", en: "Bear", category: "Tiere" },
+  { emoji: "🐸", zaza: "Bek", de: "Frosch", tr: "Kurbağa", en: "Frog", category: "Tiere" },
+  { emoji: "🐻", zaza: "Hesch", de: "Bär", tr: "Ayı", en: "Bear", category: "Tiere" },
   { emoji: "🐣", zaza: "Leyr", de: "Küken", tr: "Civciv", en: "Chick", category: "Tiere" },
-  { emoji: "🦋", zaza: "Pılpılık", de: "Schmetterling", tr: "Kelebek", en: "Butterfly", category: "Tiere" },
-  { emoji: "🐞", zaza: "Moz", de: "Käfer", tr: "Böcek", en: "Beetle", category: "Tiere" },
-  { emoji: "🐴", zaza: "ıstor", de: "Pferd", tr: "At", en: "Horse", category: "Tiere" },
+  { emoji: "🦋", zaza: "Pilpilik", de: "Schmetterling", tr: "Kelebek", en: "Butterfly", category: "Tiere" },
+  { emoji: "🪲", zaza: "Moz", de: "Käfer", tr: "Böcek", en: "Beetle", category: "Tiere" },
+  { emoji: "🐴", zaza: "Estor", de: "Pferd", tr: "At", en: "Horse", category: "Tiere" },
   { emoji: "🐜", zaza: "Mojle", de: "Ameise", tr: "Karınca", en: "Ant", category: "Tiere" },
   { emoji: "🐍", zaza: "Mar", de: "Schlange", tr: "Yılan", en: "Snake", category: "Tiere" },
   { emoji: "🐪", zaza: "Deve", de: "Kamel", tr: "Deve", en: "Camel", category: "Tiere" },
   { emoji: "🌳", zaza: "Dar", de: "Baum", tr: "Ağaç", en: "Tree", category: "Natur" },
   { emoji: "🍃", zaza: "Per", de: "Blatt", tr: "Yaprak", en: "Leaf", category: "Natur" },
-  { emoji: "🌰", zaza: "Fındık", de: "Nuss", tr: "Fındık", en: "Nut", category: "Natur" },
+  { emoji: "🌰", zaza: "Findik", de: "Nuss", tr: "Fındık", en: "Nut", category: "Natur" },
   { emoji: "🪨", zaza: "Si", de: "Stein", tr: "Taş", en: "Stone", category: "Natur" },
   { emoji: "☀️", zaza: "Roj", de: "Sonne", tr: "Güneş", en: "Sun", category: "Natur" },
-  { emoji: "🌙", zaza: "Aşmi", de: "Mond", tr: "Ay", en: "Moon", category: "Natur" },
+  { emoji: "🌙", zaza: "Aschmi", de: "Mond", tr: "Ay", en: "Moon", category: "Natur" },
   { emoji: "☁️", zaza: "Hevr", de: "Wolke", tr: "Bulut", en: "Cloud", category: "Natur" },
+  { emoji: "⭐", zaza: "Estar", de: "Stern", tr: "Yıldız", en: "Star", category: "Natur" },
+  { emoji: "🌍", zaza: "Erd", de: "Erde", tr: "Dünya", en: "Earth", category: "Natur" },
   { emoji: "🍎", zaza: "Saa", de: "Apfel", tr: "Elma", en: "Apple", category: "Essen" },
   { emoji: "🍇", zaza: "Engur", de: "Trauben", tr: "Üzüm", en: "Grapes", category: "Essen" },
-  { emoji: " ", zaza: "Zebeş", de: "Wassermelone", tr: "Karpuz", en: "Watermelone", category: "Essen" }, 
+  { emoji: "🍉", zaza: "Zebeş", de: "Wassermelone", tr: "Karpuz", en: "Watermelon", category: "Essen" },
   { emoji: "🍋", zaza: "Leymu", de: "Zitrone", tr: "Limon", en: "Lemon", category: "Essen" },
   { emoji: "🌶️", zaza: "Isot", de: "Chili", tr: "Biber", en: "Chili", category: "Essen" },
-  { emoji: "🥩", zaza: "Goşt", de: "Fleisch", tr: "Et", en: "Meat", category: "Essen" },
+  { emoji: "🥩", zaza: "Goscht", de: "Fleisch", tr: "Et", en: "Meat", category: "Essen" },
   { emoji: "🍞", zaza: "Nan", de: "Brot", tr: "Ekmek", en: "Bread", category: "Essen" },
-  { emoji: "💧", zaza: "Au", de: "Wasser", tr: "Su", en: "Water", category: "Essen" },
+  { emoji: "💧", zaza: "Aau", de: "Wasser", tr: "Su", en: "Water", category: "Essen" },
   { emoji: "🏠", zaza: "Keyye", de: "Haus", tr: "Ev", en: "House", category: "Orte" },
-  { emoji: "🏫", zaza: "Mekteb", de: "Schule", tr: "Okul", en: "School", category: "Orte" },
-  { emoji: "🏙️", zaza: "Çarşi", de: "Stadt", tr: "Şehir", en: "City", category: "Orte" }
+  { emoji: "🏫", zaza: "Mekteb", de: "Schule", tr: "Okul", en: "School", category: "Orte" }
 ];
 
 const sentences = [
@@ -513,15 +516,46 @@ function shuffle(array) {
   return array.slice().sort(() => Math.random() - 0.5);
 }
 
+function startQuiz() {
+  quizQuestions = shuffle(vocabulary).slice(0, Math.min(20, vocabulary.length));
+  quizIndex = 0;
+  quizMistakes = 0;
+  showQuiz();
+}
+
 function showQuiz() {
   const app = document.getElementById("app");
-  const current = vocabulary[quizIndex % vocabulary.length];
+
+  if (quizQuestions.length === 0) {
+    startQuiz();
+    return;
+  }
+
+  if (quizIndex >= quizQuestions.length) {
+    const passed = quizMistakes === 0;
+
+    app.innerHTML = `
+      <div class="quiz-box">
+        <div class="quiz-emoji">${passed ? "🏆" : "💪"}</div>
+        <h2>${passed ? "Congratulations! Quiz bestanden! 🎉" : "Quiz leider nicht bestanden 😅"}</h2>
+        <div class="translation">
+          ${passed
+            ? "Super! Du hast alle 20 Wörter richtig gelöst."
+            : `Du hattest ${quizMistakes} Fehler. Versuch es nochmal, du schaffst das!`}
+        </div>
+        <button type="button" class="green" onclick="startQuiz()">🔁 Neues 20-Wörter-Quiz</button>
+      </div>
+    `;
+    return;
+  }
+
+  const current = quizQuestions[quizIndex];
   const wrong = shuffle(vocabulary.filter(v => v.zaza !== current.zaza)).slice(0, 2);
   const options = shuffle([current, ...wrong]);
 
   app.innerHTML = `
     <div class="quiz-box">
-      <div class="small-label">Mini-Quiz</div>
+      <div class="small-label">Mini-Quiz ${quizIndex + 1} / ${quizQuestions.length}</div>
       <div class="quiz-emoji">${current.emoji}</div>
       <h2>Wie heißt das auf Zaza?</h2>
       <div class="translation">${translation(current)}</div>
@@ -535,6 +569,7 @@ function showQuiz() {
 
 function checkQuiz(answer, correct) {
   const feedback = document.getElementById("feedback");
+
   if (answer === correct) {
     feedback.textContent = "Richtig! 🎉";
     addPoint();
@@ -544,8 +579,17 @@ function checkQuiz(answer, correct) {
       showQuiz();
     }, 900);
   } else {
-    feedback.textContent = "Fast! Versuch es nochmal 😊";
+    quizMistakes++;
+    feedback.textContent = "Falsch 😅 Die richtige Antwort war: " + correct;
+    setTimeout(() => {
+      quizIndex++;
+      showQuiz();
+    }, 1400);
   }
+}
+
+function restartQuiz() {
+  startQuiz();
 }
 
 showWords();
