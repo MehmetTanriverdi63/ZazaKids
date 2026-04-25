@@ -133,7 +133,7 @@ const vocabulary = [
   { emoji: "🐶", zaza: "Küttek", de: "Hund", category: "Tiere" },
   { emoji: "🐰", zaza: "Arvesch", de: "Hase", category: "Tiere" },
   { emoji: "🐑", zaza: "Mi", de: "Schaf", category: "Tiere" },
-  { emoji: "🐒", zaza: "meymu", de: "Affe", category: "Tiere" },
+  { emoji: "🐒", zaza: "Meymu", de: "Affe", category: "Tiere" },
   { emoji: "🦊", zaza: "Lu", de: "Fuchs", category: "Tiere" },
   { emoji: "🦁", zaza: "Aslan", de: "Löwe", category: "Tiere" },
   { emoji: "🐸", zaza: "Bek", de: "Frosch", category: "Tiere" },
@@ -163,17 +163,17 @@ const vocabulary = [
   { emoji: "💧", zaza: "Au", de: "Wasser", category: "Essen" },
 
   { emoji: "🏠", zaza: "Keyye", de: "Haus", category: "Orte" },
-  { emoji: "🏫", zaza: "Kektep", de: "Schule", category: "Orte" },
-  { emoji: "🏙️", zaza: "carschi", de: "Stadt", category: "Orte" }
+  { emoji: "🏫", zaza: "Mekteb", de: "Schule", category: "Orte" },
+  { emoji: "🏙️", zaza: "Charschi", de: "Stadt", category: "Orte" }
 ];
 
 const sentences = [
   { zaza: "Merhaba te Senine?", de: "Hallo, wie geht es dir?" },
   { zaza: "Ez rinda", de: "Mir geht es gut." },
   { zaza: "Ez rinda, te senine", de: "Mir geht es gut. Und dir?" },
-  { zaza: "Name'y to ceco?", de: "Wie heißt du?" },
+  { zaza: "Name'y to checho?", de: "Wie heißt du?" },
   { zaza: "Name'y me Ali'yo", de: "Ich heiße Ali." },
-  { zaza: "Ezo fehm nekenna", de: "Ich verstehe nicht." },
+  { zaza: "Ezo fehm ne'kenna", de: "Ich verstehe nicht." },
   { zaza: "Fena waj", de: "Kannst du das wiederholen?" },
   { zaza: "Yavasch kissay bik", de: "Sprich bitte langsam." },
   { zaza: "Ney're sewane?", de: "Was bedeutet das?" },
@@ -181,9 +181,9 @@ const sentences = [
   { zaza: "Ez'o schina heftina", de: "Ich gehe zur Arbeit." },
   { zaza: "Ez'o keyyed", de: "Ich bin zu Hause." },
   { zaza: "Ez biya weyschan", de: "Ich habe Hunger." },
-  { zaza: "Ez bina teyschan", de: "Ich habe Durst." },
+  { zaza: "Ez biya teyschan", de: "Ich habe Durst." },
   { zaza: "Te'ye yenne?", de: "Kommst du mit?" },
-  { zaza: "Tiya kotido?", de: "Wo ist das?" },
+  { zaza: "No kotido?", de: "Wo ist das?" },
   { zaza: "Ez seni yenna uja", de: "Wie komme ich dahin?" },
   { zaza: "Ma pe bewinne?", de: "Wann treffen wir uns?" },
   { zaza: "Ogur'bo", de: "Bye bye." },
@@ -237,7 +237,7 @@ function showSentences() {
   app.innerHTML = sentences.map(s => `
     <div class="card sentence-card">
       <div class="zaza">${s.zaza}</div>
-      <div class="de">${s.de}</div><br>
+      <div class="de">${s.tr}</div><br>
       <button onclick="speak(\`${s.zaza}\`)">🔊 Hören</button>
       <button class="secondary" onclick="addPoint()">✅ Kann ich</button>
     </div>
